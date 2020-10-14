@@ -91,11 +91,10 @@ os.environ["AWS_SECRET_ACCESS_KEY"] = "NgdiHoclaD3wzbnnwNUrJshCAbKphESaoTB5kq51"
 os.environ["AWS_DEFAULT_REGION"] = "ap-southeast-1"
 
 # Celery Configuration Options
-CELERY_TIMEZONE = "Asia/Singapore"
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERYD_TASK_SOFT_TIME_LIMIT = 1800
+CELERY_TASK_DEFAULT_QUEUE = 'dev'
 CELERY_BROKER_URL = "sqs://%s:%s@" % (os.environ.get('AWS_ACCESS_KEY_ID'), os.environ.get('AWS_SECRET_ACCESS_KEY'))
-CELERY_RESULT_BACKEND = None
+#CELERY_RESULT_BACKEND = "db+postgresql://user:P@ssw0rd@db/myshop"
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     "region": os.environ.get('AWS_DEFAULT_REGION'),
     'queue_name_prefix': 'django-queue-',

@@ -1,11 +1,24 @@
 version: "3.3"
 services:
+  db:
+    container_name: db_container
+    image: postgres
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=P@ssw0rd
+      - POSTGRES_DB=myshop
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
   api:
     container_name: api-container
     build: ./api
-    command: uwsgi --ini uwsgi.ini
+    #command: uwsgi --ini uwsgi.ini
+    command: sh -c "wait-for db:5432 && python manage.py migrate && uwsgi --ini uwsgi.ini"
     volumes:
       - api:/usr/src/app
+    depends_on:
+      - db
     #ports:
     #  - 8000:8000
 
@@ -17,28 +30,22 @@ services:
     volumes:
       - api:/usr/src/app
 
-  db:
-    container_name: db_container
-    image: postgres
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=P@ssw0rd
-      - POSTGRES_DB=myshop
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
   celery:
     container_name: celery_container
     build: ./api
     volumes:
       - api:/usr/src/app
-    command: celery -A docker_django_tutorial worker -l DEBUG --prefetch-multiplier 1 -c 2
+    command: celery -A docker_django_tutorial worker -l INFO -Q dev
+    depends_on:
+      - db
+      - api
     
-  scheduler:
-    container_name: scheduler_container
-    build: ./api
-    volumes:
-      - api:/usr/src/app
-    command: celery -A docker_django_tutorial beat -l DEBUG
+  # scheduler:
+  #   container_name: scheduler_container
+  #   build: ./api
+  #   volumes:
+  #     - api:/usr/src/app
+  #   command: celery -A docker_django_tutorial beat -l INFO
  
 volumes:
   api:
