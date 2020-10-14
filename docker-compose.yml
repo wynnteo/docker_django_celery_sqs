@@ -1,0 +1,43 @@
+version: "3.3"
+services:
+  api:
+    container_name: api-container
+    build: ./api
+    command: uwsgi --ini uwsgi.ini
+    volumes:
+      - api:/usr/src/app
+    #ports:
+    #  - 8000:8000
+
+  nginx:
+    container_name: nginx_container
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - api:/usr/src/app
+
+  db:
+    container_name: db_container
+    image: postgres
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=P@ssw0rd
+      - POSTGRES_DB=myshop
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+  celery:
+    build: ./api
+    volumes:
+      - api:/usr/src/app
+    command: celery -A docker_django_tutorial worker -l debug
+    
+  scheduler:
+    build: ./api
+    volumes:
+      - api:/usr/src/app
+    command: celery -A docker_django_tutorial beat -l debug
+ 
+volumes:
+  api:
+  pgdata:

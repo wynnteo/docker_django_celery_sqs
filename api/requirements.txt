@@ -1,0 +1,5 @@
+Django==3.1.1
+djangorestframework
+uwsgi
+psycopg2
+celery
