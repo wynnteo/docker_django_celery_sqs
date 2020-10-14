@@ -3,3 +3,5 @@ djangorestframework
 uwsgi
 psycopg2
 celery
+boto3
+pycurl

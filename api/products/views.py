@@ -3,6 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response   
 from rest_framework.views import APIView
 from .serializers import ProductSerializer
+from .tasks import run_job
 
 class ProductView(APIView):
     def get(self, request, pk=None):
@@ -16,6 +17,7 @@ class ProductView(APIView):
         p = request.data.get('product') #return in dict
         product = Product(title=p['title'], description=p['description'], price=p['price'])
         product.save()
+        run_job(product.id)
         return Response({"success":"true", "message": "Product '{}' created successfully".format(p['title'])})
 
     def put(self, request, pk):

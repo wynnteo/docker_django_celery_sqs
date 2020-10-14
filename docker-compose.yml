@@ -27,16 +27,18 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data/
   celery:
+    container_name: celery_container
     build: ./api
     volumes:
       - api:/usr/src/app
-    command: celery -A docker_django_tutorial worker -l debug
+    command: celery -A docker_django_tutorial worker -l DEBUG --prefetch-multiplier 1 -c 2
     
   scheduler:
+    container_name: scheduler_container
     build: ./api
     volumes:
       - api:/usr/src/app
-    command: celery -A docker_django_tutorial beat -l debug
+    command: celery -A docker_django_tutorial beat -l DEBUG
  
 volumes:
   api:

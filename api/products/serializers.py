@@ -8,3 +8,4 @@ class ProductSerializer(serializers.Serializer):
     price = serializers.FloatField()
     created_date = serializers.DateTimeField()
     modified_date = serializers.DateTimeField()
+    status = serializers.CharField()
