@@ -1,0 +1,1 @@
+# docker_django_celery_sqs
