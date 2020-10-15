@@ -34,7 +34,7 @@ services:
     build: ./api
     volumes:
       - api:/usr/src/app
-    command: celery -A docker_django_tutorial worker -l INFO -Q myqueue
+    command: celery -A docker_django_tutorial worker -l INFO -Q myqueue --prefetch-multiplier 1 -c 2 -O fair
     depends_on:
       - db
     

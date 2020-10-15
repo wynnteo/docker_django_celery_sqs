@@ -86,7 +86,7 @@ DATABASES = {
 }
 
 # AWS Access Key
-os.environ["AWS_ACCESS_KEY_ID"] = "AKIA5NDJBFA6UKUQYUQY"
+os.environ["AWS_ACCESS_KEY_ID"] = "AWS_ACCESS_KEY_ID"
 os.environ["AWS_SECRET_ACCESS_KEY"] = "AWS_SECRET_ACCESS_KEY"
 os.environ["AWS_DEFAULT_REGION"] = "ap-southeast-1"
 
@@ -104,9 +104,9 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
 }
 # Using the database to store task state and results.
 CELERY_result_backend = None
-worker_prefetch_multiplier = 1
-CELERY_task_acks_late = True
 CELERY_TASK_ANNOTATIONS = {'*': {'default_retry_delay': 5, 'max_retries': 12}}
+task_acks_late = True
+worker_prefetch_multiplier = 1
 
 # CELERY_BEAT_SCHEDULE = {
 #     'job_timeout_checker': {
