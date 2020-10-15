@@ -8,9 +8,10 @@ def run_job(product_id):
 
 @shared_task
 def update_field(product_id):
-	print("Start update_field: %s, %s" % product_id, time.ctime())
+	print("Start update_field: %s" % time.ctime())
+	print("Product ID : %s" % product_id)
 	time.sleep(20)
-	job = get_object_or_404(Job.objects.all(), pk=product_id)
+	job = get_object_or_404(Product.objects.all(), pk=product_id)
 	job.status = 'Success'
 	job.save()
 	print("End update_field: %s" % time.ctime())

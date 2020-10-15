@@ -25,7 +25,7 @@ SECRET_KEY = 'spz(hn3kab*u1c@*9l8!9gams+54#y=l2a3cw2ukb655k@!@=+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.99.100']
+ALLOWED_HOSTS = ['*', '192.168.99.100']
 
 
 # Application definition
@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'myshop',
         'USER': 'user',
-        'PASSWORD': 'P@ssw0rd',
+        'PASSWORD': 'password',
         'HOST': 'db',
         'PORT': 5432,
     }
@@ -87,20 +87,27 @@ DATABASES = {
 
 # AWS Access Key
 os.environ["AWS_ACCESS_KEY_ID"] = "AKIA5NDJBFA6UKUQYUQY"
-os.environ["AWS_SECRET_ACCESS_KEY"] = "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"
+os.environ["AWS_SECRET_ACCESS_KEY"] = "AWS_SECRET_ACCESS_KEY"
 os.environ["AWS_DEFAULT_REGION"] = "ap-southeast-1"
 
 # Celery Configuration Options
-CELERYD_TASK_SOFT_TIME_LIMIT = 1800
-CELERY_TASK_DEFAULT_QUEUE = 'dev'
+CELERY_accept_content = ['application/json']
+CELERY_result_serializer = 'json'
+CELERY_task_serializer = 'json'
+CELERY_TASK_DEFAULT_QUEUE = 'myqueue'
 CELERY_BROKER_URL = "sqs://%s:%s@" % (os.environ.get('AWS_ACCESS_KEY_ID'), os.environ.get('AWS_SECRET_ACCESS_KEY'))
-#CELERY_RESULT_BACKEND = "db+postgresql://user:P@ssw0rd@db/myshop"
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    "region": os.environ.get('AWS_DEFAULT_REGION'),
-    'queue_name_prefix': 'django-queue-',
+    "region": "ap-southeast-1",
+    'queue_name_prefix': 'django-',
     'visibility_timeout': 7200,
     'polling_interval': 1
 }
+# Using the database to store task state and results.
+CELERY_result_backend = None
+worker_prefetch_multiplier = 1
+CELERY_task_acks_late = True
+CELERY_TASK_ANNOTATIONS = {'*': {'default_retry_delay': 5, 'max_retries': 12}}
+
 # CELERY_BEAT_SCHEDULE = {
 #     'job_timeout_checker': {
 #         'task': 'job_timeout_checker',

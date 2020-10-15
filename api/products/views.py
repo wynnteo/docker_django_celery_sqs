@@ -17,6 +17,7 @@ class ProductView(APIView):
         p = request.data.get('product') #return in dict
         product = Product(title=p['title'], description=p['description'], price=p['price'])
         product.save()
+
         run_job(product.id)
         return Response({"success":"true", "message": "Product '{}' created successfully".format(p['title'])})
 
